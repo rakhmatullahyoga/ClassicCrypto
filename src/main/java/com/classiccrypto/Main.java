@@ -12,13 +12,13 @@ package com.classiccrypto;
 public class Main {
     public static void main(String[] args) {
         String plain = "THIS PLAIN TEXT";
-        String key = "SONY";
+        String key = "sony";
         String encrypted, decrypted;
         
         System.out.println("Text : "+plain);
-        encrypted = CipherTools.encryptVigenereExtended(plain, key);
+        encrypted = CipherTools.encryptVigenereStandard(plain, key);
         System.out.println("Encrypted code :" + encrypted);
-        decrypted = CipherTools.decryptVigenereExtended(encrypted, key);
+        decrypted = CipherTools.decryptVigenereStandard(encrypted, key);
         System.out.println("Decrypted code :" + decrypted);
     }
 }
