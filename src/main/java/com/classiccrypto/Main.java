@@ -20,6 +20,9 @@ public class Main {
 //        System.out.println("Encrypted code :" + encrypted);
 //        decrypted = CipherTools.decryptVigenereStandard(encrypted, key);
 //        System.out.println("Decrypted code :" + decrypted);
-        System.out.println("Encrypted : "+CipherTools.encryptPlayfair(plain, key));
+        encrypted = CipherTools.encryptPlayfair(plain, key);
+        System.out.println("Encrypted code : "+ encrypted);
+        decrypted = CipherTools.decryptPlayfair(encrypted, key);
+        System.out.println("Decrypted code :" + decrypted);
     }
 }
