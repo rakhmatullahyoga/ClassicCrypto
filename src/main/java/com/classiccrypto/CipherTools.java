@@ -15,15 +15,17 @@ public class CipherTools {
         int skip = 0;
         char[] cipher = new char[plain.length()];
         
-        plain = plain.toUpperCase();
         key = key.toUpperCase();
         for(int i=0; i<plain.length(); i++) {
-            if(plain.charAt(i)<65||plain.charAt(i)>90) {
+            if(plain.charAt(i)>96&&plain.charAt(i)<123) {
+                cipher[i] = (char) (97 + ((int) plain.charAt(i) - 97 + key.charAt((i-skip)%key.length()) - 65) % 26);
+            }
+            else if(plain.charAt(i)>64&&plain.charAt(i)<91)
+                cipher[i] = (char) (65 + ((int) plain.charAt(i) - 65 + key.charAt((i-skip)%key.length()) - 65) % 26);
+            else {
                 skip++;
                 cipher[i] = plain.charAt(i);
             }
-            else
-                cipher[i] = (char) (65 + ((int) plain.charAt(i) - 65 + key.charAt((i-skip)%key.length()) - 65) % 26);
         }
         return String.valueOf(cipher);
     }
@@ -32,15 +34,17 @@ public class CipherTools {
         int skip = 0;
         char[] plain = new char[cipher.length()];
         
-        cipher = cipher.toUpperCase();
         key = key.toUpperCase();
         for(int i=0; i<cipher.length(); i++) {
-            if(cipher.charAt(i)<65||cipher.charAt(i)>90) {
+            if(cipher.charAt(i)>96&&cipher.charAt(i)<123) {
+                plain[i] = (char) (97 + (26 + ((int) cipher.charAt(i) - 97 - ((int) key.charAt((i-skip)%key.length()) - 65))) % 26);
+            }
+            else if(cipher.charAt(i)>64&&cipher.charAt(i)<91)
+                plain[i] = (char) (65 + (26 + ((int) cipher.charAt(i) - 65 - ((int) key.charAt((i-skip)%key.length()) - 65))) % 26);
+            else {
                 skip++;
                 plain[i] = cipher.charAt(i);
             }
-            else
-                plain[i] = (char) (65 + (26 + ((int) cipher.charAt(i) - 65 - ((int) key.charAt((i-skip)%key.length()) - 65))) % 26);
         }
         return String.valueOf(plain);
     }
@@ -92,12 +96,11 @@ public class CipherTools {
         String cipher = "";
         
         // Generating bigram
+        plain = plain.replaceAll("[^a-zA-Z]", "");
         plain = plain.toUpperCase();
         plain = plain.replace('J', 'I');
         for(int i=0; i<plain.length(); i++) {
-            if(plain.charAt(i)!=' ') {
-                bigram = bigram.concat(plain.substring(i, i+1));
-            }
+            bigram = bigram.concat(plain.substring(i, i+1));
             if(i+1<plain.length()) {
                 if(bigram.charAt(bigram.length()-1)==plain.charAt(i+1)&&bigram.length()%3==1) {
                     bigram = bigram.concat("Z");
@@ -113,9 +116,8 @@ public class CipherTools {
         matrix = new char[5][5];
         key = key.replaceAll("[^a-zA-Z]", "");      // remove non-alphabetic char
         key = key.toUpperCase();                    // make key uppercase
-        key = key.replaceAll(""+'J', "");           // remove 'J'
+        key = key.replaceAll("J", "");              // remove 'J'
         key = removeDuplicatedChar(key);            // remove repeated char
-        System.out.println("Matrix key:");
         for(int i=0; i<matrix.length; i++) {
             for(int j=0; j<matrix[i].length; j++) {
                 if(i*5+j<key.length()&&key.charAt(i*5+j)!='J') {
@@ -128,9 +130,7 @@ public class CipherTools {
                     matrix[i][j] = (char) candidate;
                     candidate++;
                 }
-                System.out.print(matrix[i][j]+" ");
             }
-            System.out.println();
         }
         
         // Encrypt process -> only alphabetic char would be encrypted
@@ -159,6 +159,7 @@ public class CipherTools {
                 cipher = cipher.concat(""+matrix[i1][j2]);
                 cipher = cipher.concat(""+matrix[i2][j1]);
             }
+            cipher = cipher.concat(" ");
         }
         return cipher;
     }
@@ -171,29 +172,20 @@ public class CipherTools {
         String plain = "";
         
         // Generating bigram
+        encrypted = encrypted.replaceAll("[^a-zA-Z]", "");
         encrypted = encrypted.toUpperCase();
         for(int i=0; i<encrypted.length(); i++) {
-            if(encrypted.charAt(i)!=' ') {
-                bigram = bigram.concat(encrypted.substring(i, i+1));
-            }
-//            if(i+1<encrypted.length()) {
-//                if(bigram.charAt(bigram.length()-1)==encrypted.charAt(i+1)&&bigram.length()%3==1) {
-//                    bigram = bigram.concat("Z");
-//                }
-//            }
+            bigram = bigram.concat(encrypted.substring(i, i+1));
             if((bigram.length()+1)%3==0)
                 bigram = bigram.concat(" ");
         }
-//        if((bigram.length())%3==1)
-//                bigram = bigram.concat("Z");
         
         // Generating matrix key
         matrix = new char[5][5];
         key = key.replaceAll("[^a-zA-Z]", "");      // remove non-alphabetic char
         key = key.toUpperCase();                    // make key uppercase
-        key = key.replaceAll(""+'J', "");           // remove 'J'
+        key = key.replaceAll("J", "");              // remove 'J'
         key = removeDuplicatedChar(key);            // remove repeated char
-        System.out.println("Matrix key:");
         for(int i=0; i<matrix.length; i++) {
             for(int j=0; j<matrix[i].length; j++) {
                 if(i*5+j<key.length()&&key.charAt(i*5+j)!='J') {
@@ -206,9 +198,7 @@ public class CipherTools {
                     matrix[i][j] = (char) candidate;
                     candidate++;
                 }
-                System.out.print(matrix[i][j]+" ");
             }
-            System.out.println();
         }
         
         // Encrypt process -> only alphabetic char would be encrypted
@@ -237,8 +227,25 @@ public class CipherTools {
                 plain = plain.concat(""+matrix[i1][j2]);
                 plain = plain.concat(""+matrix[i2][j1]);
             }
+            plain = plain.concat(" ");
         }
         return plain;
+    }
+    
+    static String removeSpaces(String str) {
+        return str.replaceAll(" ", "");
+    }
+    
+    static String groupFiveChars(String str) {
+        String noSpace = removeSpaces(str);
+        String fiveChars = "";
+        for(int i=0; i<noSpace.length(); i++) {
+            fiveChars = fiveChars.concat(noSpace.substring(i, i+1));
+            if((i+1)%5==0) {
+                fiveChars = fiveChars.concat(" ");
+            }
+        }
+        return fiveChars;
     }
     
 }
