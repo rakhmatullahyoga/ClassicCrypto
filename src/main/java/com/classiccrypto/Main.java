@@ -11,14 +11,15 @@ package com.classiccrypto;
  */
 public class Main {
     public static void main(String[] args) {
-        String plain = "THIS PLAIN TEXT";
-        String key = "sony";
+        String plain = "GOOD BROOMS SWEEP CLEAN";
+        String key = "STANDERCHBK";
         String encrypted, decrypted;
         
         System.out.println("Text : "+plain);
-        encrypted = CipherTools.encryptVigenereStandard(plain, key);
-        System.out.println("Encrypted code :" + encrypted);
-        decrypted = CipherTools.decryptVigenereStandard(encrypted, key);
-        System.out.println("Decrypted code :" + decrypted);
+//        encrypted = CipherTools.encryptVigenereStandard(plain, key);
+//        System.out.println("Encrypted code :" + encrypted);
+//        decrypted = CipherTools.decryptVigenereStandard(encrypted, key);
+//        System.out.println("Decrypted code :" + decrypted);
+        System.out.println("Encrypted : "+CipherTools.encryptPlayfair(plain, key));
     }
 }
